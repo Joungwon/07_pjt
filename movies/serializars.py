@@ -30,6 +30,7 @@ class Movie_Actor(serializers.ModelSerializer):
         fields = ('name',)
 
 class Movie_Review(serializers.ModelSerializer):
+    
     class Meta:
         model =Review
         fields = ('title','content',)
@@ -37,9 +38,10 @@ class Movie_Review(serializers.ModelSerializer):
 class MovieSerializer(serializers.ModelSerializer):
     actors = Movie_Actor(many=True,read_only=True)
     review_set = Movie_Review(many=True,read_only=True)
+    counts = serializers.IntegerField(source='review_set.count',read_only=True)
     class Meta:
         model = Movie
-        fields =('id','actors','review_set','title','overview','release_date','poster_path',)
+        fields =('id','actors','review_set','title','overview','release_date','poster_path','counts',)
 
 
 class ReviewsSerializer(serializers.ModelSerializer):
@@ -55,6 +57,7 @@ class Review_Movie(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     movie = Review_Movie(read_only=True)
+    
     # movie = serializers.CharField(source='movie_set',read_only=True)
     class Meta:
         model = Review
